@@ -1,5 +1,6 @@
 {
-  "target": "~/",
+  "target": "~/testtarget",
+  "ignore": [".git"],
   "features": [
     {
       "name": "Features for macOS",
