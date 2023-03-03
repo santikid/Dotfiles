@@ -1,5 +1,5 @@
 {
-  "target": "~/testtarget",
+  "target": "~/",
   "ignore": [".git"],
   "features": [
     {
