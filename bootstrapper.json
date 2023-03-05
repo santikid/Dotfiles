@@ -1,7 +1,10 @@
 {
   "target": "~/",
-  "ignore": [".git"],
   "features": [
+		{
+			"name": "Global Features",
+			"slug": "all"
+		},
     {
       "name": "Features for macOS",
       "slug": "macos",
