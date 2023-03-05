@@ -64,8 +64,7 @@ require('packer').startup(function()
 
 	use {"akinsho/toggleterm.nvim", tag = '*'}
 
-  -- lspsaga for code actions
---  use 'glepnir/lspsaga.nvim'
+	use "mg979/vim-visual-multi"
 
 end)
 
