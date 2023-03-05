@@ -1,6 +1,6 @@
 -- install https://github.com/wbthomason/packer.nvim before using this init.lua
 
-require('packer').startup(function()
+require('packer').startup(function(use)
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 
@@ -9,12 +9,12 @@ require('packer').startup(function()
 	-- Colorscheme
 	use 'marko-cerovac/material.nvim'
 
-	use 'windwp/nvim-autopairs' 
+	use 'windwp/nvim-autopairs'
 
 	use 'machakann/vim-sandwich'
 
   -- Use vimagit, load on :Magit
-  use {'jreybert/vimagit'}
+  use 'jreybert/vimagit'
 
   -- devicons are needed by barbar & lualine, ...
   use 'kyazdani42/nvim-web-devicons'
@@ -42,11 +42,10 @@ require('packer').startup(function()
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
   }
-	use { "nvim-telescope/telescope-file-browser.nvim" }
+	use "nvim-telescope/telescope-file-browser.nvim"
 
-	use {
-		'nvim-treesitter/nvim-treesitter'
-  }
+	use 'nvim-treesitter/nvim-treesitter'
+	use 'nvim-treesitter/nvim-treesitter-context'
 
   use 'neovim/nvim-lspconfig'
   use 'hrsh7th/nvim-cmp'
@@ -66,6 +65,7 @@ require('packer').startup(function()
 
 	use "mg979/vim-visual-multi"
 
+	
 end)
 
 require('plugins-config')
