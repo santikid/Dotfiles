@@ -1,13 +1,3 @@
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
---vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
---vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
---vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
---vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -34,7 +24,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'gopls', 'tsserver', 'emmet_ls', 'astro', 'tailwindcss', 'rust_analyzer', 'svelte' }
+local servers = { 'gopls', 'tsserver', 'astro', 'tailwindcss', 'rust_analyzer', 'svelte' }
 for _, lsp in pairs(servers) do
   require('lspconfig')[lsp].setup {
     on_attach = on_attach,
@@ -42,15 +32,30 @@ for _, lsp in pairs(servers) do
 end
 
 local lspconfig = require("lspconfig")
-lspconfig.emmet_ls.setup({
-    -- capabilities = capabilities,
-    -- on_attach = on_attach,
-    filetypes = { "html", "css", "typescriptreact", "javascriptreact" },
-})
+-- custom setup for lua
+lspconfig.lua_ls.setup {
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				library = vim.api.nvim_get_runtime_file("", true),
+			},
+			telemetry = {
+				enable = false,
+			},
+		}
+	}
+}
+
 
 local null_ls = require("null-ls")
 
-require("null-ls").setup {
+null_ls.setup {
     debug = true,
 		filetypes = {"svelte"},
     sources = {

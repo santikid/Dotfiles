@@ -8,7 +8,7 @@ set.mouse = "a"
 set.clipboard = "unnamed"
 
 vim.cmd([[
-set guifont=MesloLGL\ Nerd\ Font:h13
+set guifont=JetBrainsMono\ Nerd\ Font:h13
 ]])
 
 

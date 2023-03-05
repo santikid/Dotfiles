@@ -1,21 +1,21 @@
 vim.g.mapleader = ","
-  
+
 vim.api.nvim_set_keymap('n', '<leader>ff', ':Telescope find_files<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', '<leader>fg', ':Telescope git_files<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', '<leader>fs', ':Telescope grep_string<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', '<leader>fb', ':Telescope file_browser<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', '<leader>fo', ':Telescope oldfiles<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', '<leader>b', ':Telescope buffers<CR>', {noremap=true})
-  
+
 vim.api.nvim_set_keymap('n', '<leader>ft', ':NvimTreeToggle<CR>', {noremap=true})
-  
+
 vim.api.nvim_set_keymap('n', '<leader>z', ':ZenMode<CR>', {noremap=true})
-  
+
 vim.api.nvim_set_keymap('n', '<leader>n', ':noh<CR>', {noremap=true})
-  
+
 vim.api.nvim_set_keymap('n', 'n', '{<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', 'm', '}<CR>', {noremap=true})
-  
+
 vim.api.nvim_set_keymap('n', '<space>p', ':bprevious<CR>', {noremap=true})
 vim.api.nvim_set_keymap('n', '<space>n', ':bnext<CR>', {noremap=true})
 
