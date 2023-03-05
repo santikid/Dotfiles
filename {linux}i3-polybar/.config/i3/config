@@ -12,7 +12,7 @@ set $files dolphin
 set $term alacritty
 set $launcher dmenu_run -fn 'DejaVu Mono-20'
 
-exec --no-startup-id feh --bg-fill /home/santi/wallpaper.png
+exec --no-startup-id feh --bg-fill ~/wallpaper.png
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id polybar
