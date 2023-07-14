@@ -4,6 +4,9 @@ set.softtabstop = 2
 set.shiftwidth = 2
 set.relativenumber = true
 
+vim.g.material_style = "darker"
+vim.cmd 'colorscheme material'
+
 set.mouse = "a"
 set.clipboard = "unnamed"
 

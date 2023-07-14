@@ -13,19 +13,14 @@ require('packer').startup(function(use)
 
 	use 'machakann/vim-sandwich'
 
-  -- Use vimagit, load on :Magit
-  use 'jreybert/vimagit'
+	use { 'NeogitOrg/neogit', requires = 'nvim-lua/plenary.nvim' }
 
   -- devicons are needed by barbar & lualine, ...
-  use 'kyazdani42/nvim-web-devicons'
+  use 'nvim-tree/nvim-web-devicons'
 
-	-- file tree
 	use {
-		'nvim-tree/nvim-tree.lua',
-		requires = {
-			'nvim-tree/nvim-web-devicons', -- optional, for file icons
-		},
-		tag = 'nightly' -- optional, updated every week. (see issue #1193)
+		"folke/trouble.nvim",
+		requires = "nvim-tree/nvim-web-devicons",
 	}
 
   -- tab bar
@@ -47,13 +42,20 @@ require('packer').startup(function(use)
 	use 'nvim-treesitter/nvim-treesitter'
 	use 'nvim-treesitter/nvim-treesitter-context'
 
-  use 'neovim/nvim-lspconfig'
+	use {
+    "williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
+		"neovim/nvim-lspconfig",
+    run = ":MasonUpdate" -- :MasonUpdate updates registry contents
+}
+
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
+
 	use 'jose-elias-alvarez/null-ls.nvim'
 
   use 'L3MON4D3/LuaSnip'
@@ -64,15 +66,9 @@ require('packer').startup(function(use)
 	use {"akinsho/toggleterm.nvim", tag = '*'}
 
 	use "mg979/vim-visual-multi"
-
-	
 end)
 
 require('plugins-config')
 require('settings')
-require('appearance')
-require('keybindings')
-require('lsp-config')
-require('cmp-config')
-require('treesitter-config')
-require('telescope-config')
+require('keys')
+require('lsp')
