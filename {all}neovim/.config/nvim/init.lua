@@ -66,6 +66,8 @@ require('packer').startup(function(use)
 	use {"akinsho/toggleterm.nvim", tag = '*'}
 
 	use "mg979/vim-visual-multi"
+
+	use "folke/neodev.nvim"
 end)
 
 require('plugins-config')
