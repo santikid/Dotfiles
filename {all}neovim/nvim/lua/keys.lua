@@ -7,10 +7,13 @@ vim.api.nvim_set_keymap('n', '<leader>fb', ':Telescope file_browser<CR>', { nore
 vim.api.nvim_set_keymap('n', '<leader>fo', ':Telescope oldfiles<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>b', ':Telescope buffers<CR>', { noremap = true })
 
+vim.api.nvim_set_keymap('n', '<leader>ft', ':NvimTreeOpen<CR>', { noremap = true })
+
 vim.api.nvim_set_keymap('n', '<leader>z', ':ZenMode<CR>', { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>n', ':noh<CR>', { noremap = true })
 
+vim.api.nvim_set_keymap('n', 'n', '{<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', 'm', '}<CR>', { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<S-tab>', ':bprevious<CR>', { noremap = true })

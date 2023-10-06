@@ -1,0 +1,20 @@
+alias f="open -a \"Finder\" ."
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+alias accelon="defaults write .GlobalPreferences com.apple.mouse.scaling -1"
+alias acceloff="defaults write .GlobalPreferences com.apple.mouse.scaling 0.6875"
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

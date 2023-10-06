@@ -1,5 +1,4 @@
 -- install https://github.com/wbthomason/packer.nvim before using this init.lua
-
 require('packer').startup(function(use)
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
@@ -17,6 +16,8 @@ require('packer').startup(function(use)
 
   -- devicons are needed by barbar & lualine, ...
   use 'nvim-tree/nvim-web-devicons'
+
+	use 'nvim-tree/nvim-tree.lua'
 
 	use {
 		"folke/trouble.nvim",
@@ -70,7 +71,7 @@ require('packer').startup(function(use)
 	use "folke/neodev.nvim"
 end)
 
-require('plugins-config')
 require('settings')
-require('keys')
+require('plugins-config')
 require('lsp')
+require('keys')

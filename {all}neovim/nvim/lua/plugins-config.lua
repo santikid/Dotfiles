@@ -57,3 +57,5 @@ require("telescope").load_extension "file_browser"
 require('neogit').setup{}
 
 require('neodev').setup{}
+
+require('nvim-tree').setup{}

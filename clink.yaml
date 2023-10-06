@@ -1,0 +1,24 @@
+features:
+  - slug: all
+    target: ~/.config
+    enabled: all
+
+  - slug: all_home
+    target: ~/
+    enabled: all
+
+  - slug: mac
+    target: ~/.config
+    enabled: macos
+
+  - slug: mac_home
+    target: ~/
+    enabled: macos
+
+  - slug: linux
+    target: ~/.config
+    enabled: linux
+
+  - slug: linux_home
+    target: ~/
+    enabled: linux
