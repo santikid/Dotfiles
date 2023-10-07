@@ -2,7 +2,7 @@ require("nvim-autopairs").setup {}
 require("toggleterm").setup{}
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "typescript", "tsx", "go", "json", "json5", "latex", "css", "html", "astro", "svelte", "lua" },
+  ensure_installed = { "rust", "typescript", "tsx", "json", "json5", "css", "html", "astro", "svelte", "lua" },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = true,

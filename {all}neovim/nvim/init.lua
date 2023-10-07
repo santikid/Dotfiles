@@ -1,75 +1,84 @@
--- install https://github.com/wbthomason/packer.nvim before using this init.lua
-require('packer').startup(function(use)
-  -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
+-- install lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
 
-	use "folke/zen-mode.nvim"
+
+require("lazy").setup({
+	"folke/zen-mode.nvim",
 
 	-- Colorscheme
-	use 'marko-cerovac/material.nvim'
+	'marko-cerovac/material.nvim',
 
-	use 'windwp/nvim-autopairs'
+	'windwp/nvim-autopairs',
 
-	use 'machakann/vim-sandwich'
+	'machakann/vim-sandwich',
 
-	use { 'NeogitOrg/neogit', requires = 'nvim-lua/plenary.nvim' }
+	{
+		'NeogitOrg/neogit',
+		dependencies = 'nvim-lua/plenary.nvim'
+	},
 
-  -- devicons are needed by barbar & lualine, ...
-  use 'nvim-tree/nvim-web-devicons'
+	-- devicons are needed by barbar & lualine, ...
+	'nvim-tree/nvim-web-devicons',
 
-	use 'nvim-tree/nvim-tree.lua'
+	'nvim-tree/nvim-tree.lua',
 
-	use {
+	{
 		"folke/trouble.nvim",
-		requires = "nvim-tree/nvim-web-devicons",
-	}
+		dependencies = "nvim-tree/nvim-web-devicons",
+	},
 
-  -- tab bar
-  use 'romgrk/barbar.nvim'
+	-- tab bar
+	'romgrk/barbar.nvim',
 
-  -- status line
-  use 'nvim-lualine/lualine.nvim'
+	-- status line
+	'nvim-lualine/lualine.nvim',
 
-  -- file browser
-  use 'lambdalisue/fern.vim'
+	-- fzzy finder
+	{
+		'nvim-telescope/telescope.nvim',
+		dependencies = 'nvim-lua/plenary.nvim'
+	},
+	"nvim-telescope/telescope-file-browser.nvim",
 
-  -- fzzy finder
-  use {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-	use "nvim-telescope/telescope-file-browser.nvim"
+	'nvim-treesitter/nvim-treesitter',
+	'nvim-treesitter/nvim-treesitter-context',
 
-	use 'nvim-treesitter/nvim-treesitter'
-	use 'nvim-treesitter/nvim-treesitter-context'
+	"williamboman/mason.nvim",
+	"williamboman/mason-lspconfig.nvim",
+	"neovim/nvim-lspconfig",
 
-	use {
-    "williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
-    run = ":MasonUpdate" -- :MasonUpdate updates registry contents
-}
+	'hrsh7th/nvim-cmp',
+	'hrsh7th/cmp-nvim-lsp',
+	'hrsh7th/cmp-nvim-lua',
+	'hrsh7th/cmp-buffer',
+	'hrsh7th/cmp-path',
+	'hrsh7th/cmp-cmdline',
 
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-nvim-lua'
-  use 'hrsh7th/cmp-buffer'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
+	-- DEPRECATED - replace once good alternatives are available
+	'jose-elias-alvarez/null-ls.nvim',
 
-	use 'jose-elias-alvarez/null-ls.nvim'
+	'github/copilot.vim',
 
-  use 'L3MON4D3/LuaSnip'
-  use 'saadparwaiz1/cmp_luasnip'
+	{
+		"akinsho/toggleterm.nvim",
+		version = '*'
+	},
 
-	use 'github/copilot.vim'
+	"mg979/vim-visual-multi",
 
-	use {"akinsho/toggleterm.nvim", tag = '*'}
-
-	use "mg979/vim-visual-multi"
-
-	use "folke/neodev.nvim"
-end)
+	"folke/neodev.nvim",
+})
 
 require('settings')
 require('plugins-config')

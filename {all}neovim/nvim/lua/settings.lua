@@ -13,5 +13,3 @@ set.clipboard = "unnamed"
 vim.cmd([[
 set guifont=JetBrainsMono\ Nerd\ Font:h13
 ]])
-
-
