@@ -7,7 +7,7 @@ default_floating_border pixel 1
 set $mod Mod4
 font pango:DejaVu Sans Mono 8
 
-set $browser firefox
+set $browser chromium-browser 
 set $files dolphin
 set $term alacritty
 set $launcher dmenu_run -fn 'DejaVu Mono-20'
@@ -15,6 +15,10 @@ set $launcher dmenu_run -fn 'DejaVu Mono-20'
 input * {
   xkb_layout "de"
   xkb_variant "mac"
+}
+
+input 1452:834:Apple_Internal_Keyboard_/_Trackpad {
+	scroll_factor 0.25
 }
 
 output eDP-1 scale 1.5
@@ -81,7 +85,7 @@ bindsym $mod+i fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+#bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
