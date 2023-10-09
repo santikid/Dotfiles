@@ -26,13 +26,6 @@ alias ll="exa -la"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
-
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-
 eval "$(fnm env --use-on-cd)"
 
 # starship prompt
