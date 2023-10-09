@@ -1,5 +1,5 @@
 window:
-  option_as_alt: Both
+  #option_as_alt: Both
   # Values for `decorations`:
   #     - full: Borders and title bar
   #     - none: Neither borders nor title bar
