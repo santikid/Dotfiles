@@ -15,6 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	"folke/zen-mode.nvim",
+	"nvim-lua/plenary.nvim",
 
 	-- Colorscheme
 	'marko-cerovac/material.nvim',
@@ -64,6 +65,13 @@ require("lazy").setup({
 	'hrsh7th/cmp-buffer',
 	'hrsh7th/cmp-path',
 	'hrsh7th/cmp-cmdline',
+
+	{
+		"L3MON4D3/LuaSnip",
+		version = "v2.*",
+	},
+	"saadparwaiz1/cmp_luasnip",
+
 
 	-- DEPRECATED - replace once good alternatives are available
 	'jose-elias-alvarez/null-ls.nvim',
