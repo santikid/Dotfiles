@@ -53,4 +53,5 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 alias d='dirs -v'
 for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
+export PATH="$PATH:$HOME/.config/bin"
 source ~/.zshplatform
