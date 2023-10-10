@@ -26,8 +26,6 @@ alias ll="exa -la"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-eval "$(fnm env --use-on-cd)"
-
 # starship prompt
 eval "$(starship init zsh)"
 

@@ -1,6 +1,8 @@
 alias f="dolphin"
 alias c="code --enable-features=UseOzonePlatform --ozone-platform=wayland"
 
+eval "$(fnm env --use-on-cd)"
+
 # pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
