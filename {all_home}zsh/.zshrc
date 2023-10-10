@@ -20,8 +20,8 @@ alias glol='git log --graph --oneline --decorate'
 alias vim="nvim"
 alias c="code"
 
-alias l="exa -l"
-alias ll="exa -la"
+alias l="ls -l"
+alias ll="ls -la"
 
 export EDITOR="nvim"
 export VISUAL="nvim"
