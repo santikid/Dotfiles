@@ -1,39 +1,39 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
-vim.api.nvim_set_keymap('n', '<leader>ff', ':Telescope find_files<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>fg', ':Telescope git_files<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>fs', ':Telescope grep_string<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>fb', ':Telescope file_browser<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>fo', ':Telescope oldfiles<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>b', ':Telescope buffers<CR>', { noremap = true })
+local opts = { noremap = true, silent = true }
 
-vim.api.nvim_set_keymap('n', '<leader>ft', ':NvimTreeToggle<CR>', { noremap = true })
+local ts = require('telescope.builtin')
+local ts_fp = require('telescope').extensions.file_browser
+vim.keymap.set('n', '<leader>ff', ts.find_files, opts)
+vim.keymap.set('n', '<leader>fg', ts.git_files, opts)
+vim.keymap.set('n', '<leader>fs', ts.live_grep, opts)
+vim.keymap.set('n', '<leader>fb', ts_fp.file_browser, opts)
+vim.keymap.set('n', '<leader>fo', ts.oldfiles, opts)
+vim.keymap.set('n', '<leader>b', ts.buffers, opts)
 
-vim.api.nvim_set_keymap('n', '<leader>z', ':ZenMode<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>ft', require("nvim-tree.api").tree.toggle, opts)
 
-vim.api.nvim_set_keymap('n', '<leader>n', ':noh<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>z', require("zen-mode").toggle, opts)
 
-vim.api.nvim_set_keymap('n', 'n', '{<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', 'm', '}<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>g', require("neogit").open, opts)
 
-vim.api.nvim_set_keymap('n', '<S-tab>', ':bprevious<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<tab>', ':bnext<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>tt', require("trouble").toggle, opts)
 
-vim.api.nvim_set_keymap('n', '<leader>q', ':bd<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>n', ':noh<CR>', opts)
 
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true })
+vim.api.nvim_set_keymap('n', '<S-tab>', ':bprevious<CR>', opts)
+vim.api.nvim_set_keymap('n', '<tab>', ':bnext<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>q', ':bd<CR>', opts)
 
-vim.api.nvim_set_keymap('n', '<leader>t', ':ToggleTerm 1<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', opts)
+vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', opts)
+vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', opts)
+vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', opts)
 
-vim.api.nvim_set_keymap('n', '<leader>tt', ':TroubleToggle<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>t', ':ToggleTerm 1<CR>', opts)
 
-vim.api.nvim_set_keymap('n', '<leader>g', ':Neogit<CR>', { noremap = true })
-
-vim.api.nvim_set_keymap('t', '<esc>', '<C-\\><C-N>', { noremap = true })
+vim.api.nvim_set_keymap('t', '<esc>', '<C-\\><C-N>', opts)
 
 -- keybindings for multi-cursor
 vim.g.VM_maps = {
