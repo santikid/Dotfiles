@@ -22,9 +22,20 @@ vim.keymap.set('n', '<leader>tt', require("trouble").toggle, opts)
 
 vim.api.nvim_set_keymap('n', '<leader>n', ':noh<CR>', opts)
 
-vim.api.nvim_set_keymap('n', '<S-tab>', ':bprevious<CR>', opts)
-vim.api.nvim_set_keymap('n', '<tab>', ':bnext<CR>', opts)
-vim.api.nvim_set_keymap('n', '<leader>q', ':bd<CR>', opts)
+-- barbar.nvim includes better versions of :bnext, :bprevious, :bd
+vim.api.nvim_set_keymap('n', '<S-tab>', '<Cmd>BufferPrevious<CR>', opts)
+vim.api.nvim_set_keymap('n', '<tab>', '<Cmd>BufferNext<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>q', '<Cmd>BufferClose<CR>', opts)
+
+vim.api.nvim_set_keymap('n', '<leader>1', '<Cmd>BufferGoto 1<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>2', '<Cmd>BufferGoto 2<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>3', '<Cmd>BufferGoto 3<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>4', '<Cmd>BufferGoto 4<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>5', '<Cmd>BufferGoto 5<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>6', '<Cmd>BufferGoto 6<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>7', '<Cmd>BufferGoto 7<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>8', '<Cmd>BufferGoto 8<CR>', opts)
+vim.api.nvim_set_keymap('n', '<leader>9', '<Cmd>BufferGoto 9<CR>', opts)
 
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', opts)
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', opts)
