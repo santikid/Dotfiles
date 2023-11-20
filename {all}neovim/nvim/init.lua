@@ -73,8 +73,7 @@ require("lazy").setup({
   },
   "saadparwaiz1/cmp_luasnip",
 
-  -- DEPRECATED; eventually replace with conform.nvim
-  'jose-elias-alvarez/null-ls.nvim',
+  'nvimtools/none-ls.nvim',
 
   'github/copilot.vim',
 

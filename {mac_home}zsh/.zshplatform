@@ -8,11 +8,6 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 eval "$(fnm env --use-on-cd)"
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-alias accelon="defaults write .GlobalPreferences com.apple.mouse.scaling -1"
-alias acceloff="defaults write .GlobalPreferences com.apple.mouse.scaling 0.6875"
-
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
