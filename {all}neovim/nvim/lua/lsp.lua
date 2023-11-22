@@ -12,7 +12,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		bufmap('n', 'gd', vim.lsp.buf.definition)
 		bufmap('n', 'K', vim.lsp.buf.hover)
 		bufmap('n', 'gi', vim.lsp.buf.implementation)
-		bufmap('n', '<C-k>', vim.lsp.buf.signature_help)
+		bufmap('n', '<M-k>', vim.lsp.buf.signature_help)
 		bufmap('n', '<space>wa', vim.lsp.buf.add_workspace_folder)
 		bufmap('n', '<space>wr', vim.lsp.buf.remove_workspace_folder)
 		bufmap('n', '<space>wl', function()
@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		bufmap('n', '<space>D', vim.lsp.buf.type_definition)
 		bufmap('n', '<space>rn', vim.lsp.buf.rename)
 		bufmap('n', '<space>ca', vim.lsp.buf.code_action)
-		bufmap('n', 'gr', vim.lsp.buf.references)
+		bufmap('n', 'gr', function() require("trouble").toggle("lsp_references") end)
 		bufmap('n', '<space>f', vim.lsp.buf.format)
 	end
 })
