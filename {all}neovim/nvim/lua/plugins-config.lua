@@ -4,7 +4,7 @@ require('nvim-ts-autotag').setup()
 require("toggleterm").setup {}
 
 require 'nvim-treesitter.configs'.setup {
-  ensure_installed = { "rust", "typescript", "tsx", "json", "json5", "css", "html", "astro", "svelte", "lua", "regex", "bash", "markdown", "markdown_inline" },
+  ensure_installed = { "rust", "javascript", "typescript", "tsx", "json", "json5", "css", "scss", "html", "astro", "svelte", "lua", "regex", "bash", "markdown", "markdown_inline" },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = true,
