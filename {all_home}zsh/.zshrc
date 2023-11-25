@@ -26,9 +26,6 @@ alias ll="ls -la"
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# starship prompt
-eval "$(starship init zsh)"
-
 autoload -U compinit; compinit
 _comp_options+=(globdots) # With hidden files
 
