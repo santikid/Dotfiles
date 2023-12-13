@@ -47,6 +47,13 @@ require('lualine').setup {
 }
 
 require("telescope").setup {
+  defaults = {
+    mappings = {
+      n = {
+        ["<C-q>"] = "send_to_qflist",
+      }
+    }
+  },
   extensions = {
     file_browser = {
       hijack_netrw = true,
