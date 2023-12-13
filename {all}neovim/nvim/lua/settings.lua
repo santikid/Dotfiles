@@ -10,8 +10,7 @@ set.foldmethod = "expr"
 set.foldexpr = "nvim_treesitter#foldexpr()"
 set.foldlevelstart = 99
 
-vim.g.material_style = "darker"
-vim.cmd 'colorscheme material'
+vim.cmd 'colorscheme kanagawa'
 
 set.mouse = "a"
 set.clipboard = "unnamed"

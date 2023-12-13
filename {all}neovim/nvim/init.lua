@@ -18,7 +18,7 @@ require("lazy").setup({
   "nvim-lua/plenary.nvim",
 
   -- Colorscheme
-  'marko-cerovac/material.nvim',
+  'rebelot/kanagawa.nvim',
 
   'windwp/nvim-autopairs',
   'windwp/nvim-ts-autotag',
