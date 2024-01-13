@@ -10,7 +10,7 @@ font pango:DejaVu Sans Mono 8
 set $browser chromium-browser 
 set $files dolphin
 set $term alacritty
-set $launcher dmenu_run -fn 'DejaVu Mono-20'
+set $launcher rofi -show run -theme Arc-Dark
 
 input * {
   xkb_layout "de"
@@ -18,10 +18,10 @@ input * {
 }
 
 input 1452:834:Apple_Internal_Keyboard_/_Trackpad {
-	scroll_factor 0.25
+	scroll_factor 0.75
 }
 
-output eDP-1 scale 1.5
+output eDP-1 scale 1.75
 
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
