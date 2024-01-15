@@ -20,6 +20,10 @@ vim.keymap.set('n', '<leader>g', require("neogit").open, opts)
 
 vim.keymap.set('n', '<leader>tt', function () require("trouble").toggle("workspace_diagnostics") end, opts)
 
+vim.api.nvim_set_keymap('n', 'ß', '`', opts)
+vim.api.nvim_set_keymap('n', 'ü', '{', opts)
+vim.api.nvim_set_keymap('n', '+', '}', opts)
+
 vim.api.nvim_set_keymap('n', '<leader>n', ':noh<CR>', opts)
 
 -- barbar.nvim includes better versions of :bnext, :bprevious, :bd
