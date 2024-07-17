@@ -18,7 +18,6 @@ alias glo='git log --pretty="oneline"'
 alias glol='git log --graph --oneline --decorate'
 
 alias vim="nvim"
-alias c="code"
 
 alias l="ls -l"
 alias ll="ls -la"
@@ -51,6 +50,3 @@ for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
 export PATH="$PATH:$HOME/.config/bin"
 source ~/.zshplatform
-
-# bun completions
-[ -s "/Users/santi/.bun/_bun" ] && source "/Users/santi/.bun/_bun"
