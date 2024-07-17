@@ -17,4 +17,4 @@ features:
 
   - slug: server
     target: ~/
-    enabled: linux
+    enabled: none
