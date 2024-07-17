@@ -1,0 +1,7 @@
+if [[ $(uname) == "Darwin" ]]; then
+  alias f="open -a \"Finder\" ."
+  export PATH="/opt/homebrew/bin:$PATH"
+fi
+
+# starship prompt
+eval "$(starship init zsh)"

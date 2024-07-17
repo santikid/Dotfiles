@@ -1,3 +1,0 @@
-[submodule "{all_home}private"]
-	path = {all_home}private
-	url = git@github.com:santikid/private.git

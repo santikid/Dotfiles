@@ -4,25 +4,17 @@ ignore:
 
 features:
   - slug: all
-    target: ~/.config
-    enabled: all
-
-  - slug: all_home
     target: ~/
     enabled: all
 
   - slug: mac
-    target: ~/.config
-    enabled: macos
-
-  - slug: mac_home
     target: ~/
     enabled: macos
 
   - slug: linux
-    target: ~/.config
+    target: ~/
     enabled: linux
 
-  - slug: linux_home
+  - slug: server
     target: ~/
     enabled: linux
