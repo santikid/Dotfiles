@@ -51,6 +51,11 @@ return {
         "<cmd>Telescope file_browser<cr>",
         "Find Files",
       },
+      {
+        "<leader>b",
+        "<cmd>Telescope buffers<cr>",
+        "Find Files",
+      },
     },
   },
   {
