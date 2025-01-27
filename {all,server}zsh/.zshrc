@@ -44,9 +44,18 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
+bindkey '^R' history-incremental-search-backward
+
+source <(fzf --zsh)
 
 alias d='dirs -v'
 for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
 export PATH="$PATH:$HOME/.config/bin"
 source ~/.zshplatform
+
+# bun completions
+[ -s "/Users/santi/.bun/_bun" ] && source "/Users/santi/.bun/_bun"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/santi/.lmstudio/bin"

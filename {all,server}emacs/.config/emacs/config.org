@@ -1,12 +1,14 @@
 #+TITLE: santis emacs config
 #+AUTHOR: Lukas Santner
 #+DESCRIPTION: emacs config based on / copied from DistroTubes configuring emacs series
+#+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 #+startup: showeverything
 #+OPTIONS: toc:2
 
 * Table of Contents :toc:
 - [[#config][config]]
-  - [[#elpaca-package-manager][Elpaca Package Manager]]
+  - [[#auto-tangle-configuration-file][Auto Tangle Configuration File]]
+  - [[#use-package][Use-Package]]
   - [[#set-up-evil-mode][Set up Evil Mode]]
   - [[#macos-modifier-keys-setup][macOS modifier keys setup]]
   - [[#use-relative-line-numbers][Use relative line numbers]]
@@ -17,82 +19,55 @@
   - [[#disable-menubar-toolbars-and-scrollbars][Disable Menubar, Toolbars and Scrollbars]]
   - [[#display-line-numbers-and-truncated-lines][Display Line Numbers and Truncated Lines]]
   - [[#install-monokai-pro][Install monokai-pro]]
-- [[#all-the-icons][ALL THE ICONS]]
-- [[#ivy-counsel][IVY (COUNSEL)]]
+- [[#nerd-icons][Nerd Icons]]
+- [[#completion][COMPLETION]]
+- [[#rainbow-delims][rainbow delims]]
 - [[#org-mode][ORG MODE]]
   - [[#enabling-table-of-contents][Enabling Table of Contents]]
   - [[#enabling-org-bullets][Enabling Org Bullets]]
   - [[#disable-electric-indent][Disable Electric Indent]]
   - [[#enable-org-tempo][Enable Org-Tempo]]
 - [[#which-key][WHICH-KEY]]
-- [[#buffer-move][BUFFER-MOVE]]
 - [[#shells-and-terminals][SHELLS AND TERMINALS]]
-  - [[#eshell][Eshell]]
-  - [[#vterm][Vterm]]
-  - [[#vterm-toggle][Vterm-Toggle]]
+  - [[#eat][Eat]]
+- [[#dev][Dev]]
+  - [[#projectel][Project.el]]
+  - [[#lsp][LSP]]
+  - [[#treesitter][Treesitter]]
+  - [[#treesit-fold][Treesit-Fold]]
 
 * config
-** Elpaca Package Manager
+** Auto Tangle Configuration File
+
 #+begin_src emacs-lisp
-  (defvar elpaca-installer-version 0.6)
-  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                                :ref nil
-                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                                :build (:not elpaca--activate-package)))
-  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-         (build (expand-file-name "elpaca/" elpaca-builds-directory))
-         (order (cdr elpaca-order))
-         (default-directory repo))
-    (add-to-list 'load-path (if (file-exists-p build) build repo))
-    (unless (file-exists-p repo)
-      (make-directory repo t)
-      (when (< emacs-major-version 28) (require 'subr-x))
-      (condition-case-unless-debug err
-          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                   ((zerop (call-process "git" nil buffer t "clone"
-                                         (plist-get order :repo) repo)))
-                   ((zerop (call-process "git" nil buffer t "checkout"
-                                         (or (plist-get order :ref) "--"))))
-                   (emacs (concat invocation-directory invocation-name))
-                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                   ((require 'elpaca))
-                   ((elpaca-generate-autoloads "elpaca" repo)))
-              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-            (error "%s" (with-current-buffer buffer (buffer-string))))
-        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-    (unless (require 'elpaca-autoloads nil t)
-      (require 'elpaca)
-      (elpaca-generate-autoloads "elpaca" repo)
-      (load "./elpaca-autoloads")))
-  (add-hook 'after-init-hook #'elpaca-process-queues)
-  (elpaca `(,@elpaca-order))
+  (defun start/org-babel-tangle-config ()
+    "Automatically tangle our Emacs.org config file when we save it. Credit to Emacs From Scratch for this one!"
+    (when (string-equal (file-name-directory (buffer-file-name))
+                        (expand-file-name user-emacs-directory))
+      ;; Dynamic scoping to the rescue
+      (let ((org-confirm-babel-evaluate nil))
+        (org-babel-tangle))))
 
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'start/org-babel-tangle-config)))
+#+end_src
 
-  ;; Install use-package support
-  (elpaca elpaca-use-package
-    ;; Enable :elpaca use-package keyword.
-    (elpaca-use-package-mode)
-    ;; Assume :elpaca t unless otherwise specified.
-    (setq elpaca-use-package-by-default t))
+** Use-Package
 
-  ;; Block until current queue processed.
-  (elpaca-wait)
+#+begin_src emacs-lisp
+  ;; without this for some reason emacs breaks
+  (require 'package)
+  (package-initialize)
+
+  (require 'use-package-ensure) ;; Load use-package-always-ensure
+  (setq use-package-always-ensure t) ;; Always ensures that a package is installed
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) ;; For Eat Terminal
 #+end_src
 
 ** Set up Evil Mode
 #+begin_src emacs-lisp
-  ;;When installing a package which modifies a form used at the top-level
-  ;;(e.g. a package which adds a use-package key word),
-  ;;use `elpaca-wait' to block until that package has been installed/configured.
-  ;;For example:
-  ;;(use-package general :demand t)
-  ;;(elpaca-wait)
-
-  ;; Expands to: (elpaca evil (use-package evil :demand t))
   (use-package evil
     :init
     (setq evil-want-integration t)
@@ -102,17 +77,8 @@
   (use-package evil-collection
     :after evil
     :config
-    (setq evil-collection-mode-list '(dashboard dired ibuffer))
+    (setq evil-collection-mode-list '(dashboard dired ibuffer magit corfu vertico))
     (evil-collection-init))
-  (use-package evil-tutor)
-
-  ;;Turns off elpaca-use-package-mode current declartion
-  ;;Note this will cause the declaration to be interpreted immediately (not deferred).
-  ;;Useful for configuring built-in emacs features.
-  (use-package emacs :elpaca nil :config (setq ring-bell-function #'ignore))
-
-  ;; Don't install anything. Defer execution of BODY
-  (elpaca nil (message "deferred"))
 #+end_src
 
 ** macOS modifier keys setup
@@ -167,14 +133,9 @@ FROM: https://github.com/doomemacs/doomemacs/issues/3952
       "b r" '(revert-buffer :wk "Reload buffer"))
 
     (santi/leader
-      "e" '(:ignore t :wk "Eshell/Evaluate")    
-      "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
-      "e d" '(eval-defun :wk "Evaluate defun containing or after point")
-      "e e" '(eval-expression :wk "Evaluate and elisp expression")
-      "e h" '(counsel-esh-history :which-key "Eshell history")
-      "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
-      "e r" '(eval-region :wk "Evaluate elisp in region")
-      "e s" '(eshell :which-key "Eshell"))
+      "e" '(:ignore t :wk "Show")
+      "e t" '(eat :wk "Eat terminal"))
+
 
     (santi/leader
       "h" '(:ignore t :wk "Help")
@@ -189,6 +150,10 @@ FROM: https://github.com/doomemacs/doomemacs/issues/3952
       "t v" '(vterm-toggle :wk "Toggle vterm"))
 
     (santi/leader
+      "p" '(:ignore t :wk "Project")
+      "p o" '(project-switch-project :wk "Switch Project"))
+
+    (santi/leader
       "w" '(:ignore t :wk "Windows")
       ;; Window splits
       "w c" '(evil-window-delete :wk "Close window")
@@ -201,12 +166,8 @@ FROM: https://github.com/doomemacs/doomemacs/issues/3952
       "w k" '(evil-window-up :wk "Window up")
       "w l" '(evil-window-right :wk "Window right")
       "w w" '(evil-window-next :wk "Goto next window")
-      ;; Move Windows
-      "w H" '(buf-move-left :wk "Buffer move left")
-      "w J" '(buf-move-down :wk "Buffer move down")
-      "w K" '(buf-move-up :wk "Buffer move up")
-      "w L" '(buf-move-right :wk "Buffer move right"))
-    )
+      ))
+
 #+end_src
 
 * FONTS
@@ -266,57 +227,104 @@ Defining the various fonts that Emacs will use.
     :config
     (load-theme 'monokai-pro t))
 #+end_src
-* ALL THE ICONS
+* Nerd Icons
 This is an icon set that can be used with dashboard, dired, ibuffer and other Emacs programs.
-  
-#+begin_src emacs-lisp
-(use-package all-the-icons
-  :ensure t
-  :if (display-graphic-p))
-
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
-#+end_src
-
-* IVY (COUNSEL)
-+ Ivy, a generic completion mechanism for Emacs.
-+ Counsel, a collection of Ivy-enhanced versions of common Emacs commands.
-+ Ivy-rich allows us to add descriptions alongside the commands in M-x.
 
 #+begin_src emacs-lisp
-  (use-package counsel
-    :after ivy
-    :config (counsel-mode))
-  
-  (use-package ivy
-    :bind
-    ;; ivy-resume resumes the last Ivy-based completion.
-    (("C-c C-r" . ivy-resume)
-     ("C-x B" . ivy-switch-buffer-other-window))
-    :custom
-    (setq ivy-use-virtual-buffers t)
-    (setq ivy-count-format "(%d/%d) ")
-    (setq enable-recursive-minibuffers t)
-    :config
-    (ivy-mode))
+  (use-package nerd-icons
+    :if (display-graphic-p))
 
-  (use-package all-the-icons-ivy-rich
-    :ensure t
-    :init (all-the-icons-ivy-rich-mode 1))
+  (use-package nerd-icons-dired
+    :hook (dired-mode . (lambda () (nerd-icons-dired-mode t))))
 
-  (use-package ivy-rich
-    :after ivy
-    :ensure t
-    :init (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
-    :custom
-    (ivy-virtual-abbreviate 'full
-     ivy-rich-switch-buffer-align-virtual-buffer t
-     ivy-rich-path-style 'abbrev)
-    :config
-    (ivy-set-display-transformer 'ivy-switch-buffer
-                                 'ivy-rich-switch-buffer-transformer))
+  (use-package nerd-icons-ibuffer
+    :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 #+end_src
+
+* COMPLETION
+#+begin_src emacs-lisp
+  (use-package vertico
+    :init
+    (vertico-mode))
+
+  (savehist-mode) ;; Enables save history mode
+
+  (use-package marginalia
+    :after vertico
+    :init
+    (marginalia-mode))
+
+  (use-package nerd-icons-completion
+    :after marginalia
+    :config
+    (nerd-icons-completion-mode)
+    :hook
+    ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
+
+  (use-package corfu
+    ;; Optional customizations
+    :custom
+    (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t)                 ;; Enable auto completion
+    (corfu-auto-prefix 2)          ;; Minimum length of prefix for auto completion.
+    (corfu-popupinfo-mode t)       ;; Enable popup information
+    (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
+    ;; (corfu-separator ?\s)          ;; Orderless field separator, Use M-SPC to enter separator
+    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+    (completion-ignore-case t)
+    ;; Enable indentation+completion using the TAB key.
+    ;; `completion-at-point' is often bound to M-TAB.
+    (tab-always-indent 'complete)
+    (corfu-preview-current nil) ;; Don't insert completion without confirmation
+    ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+    ;; be used globally (M-/).  See also the customization variable
+    ;; `global-corfu-modes' to exclude certain modes.
+    :init
+    (global-corfu-mode))
+
+  (use-package nerd-icons-corfu
+    :after corfu
+    :init (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+  
+(use-package consult
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  :config
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key "M-.")
+  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+
+  (setq consult-project-function #'consult--default-project--function)
+  )
+#+end_src
+* rainbow delims
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+  #+end_src
 
 * ORG MODE
 ** Enabling Table of Contents
@@ -343,7 +351,7 @@ Org-bullets gives us attractive bullets rather than asterisks.
 ** Enable Org-Tempo
 #+begin_src emacs-lisp
   (require 'org-tempo)
-#+end_src
+#+End_Src
 
 * WHICH-KEY
 #+begin_src emacs-lisp
@@ -365,133 +373,119 @@ Org-bullets gives us attractive bullets rather than asterisks.
           which-key-separator " → " ))
 #+end_src
 
-* BUFFER-MOVE
-Creating some functions to allow us to easily move windows (splits) around.  The following block of code was taken from buffer-move.el found on the EmacsWiki:
-https://www.emacswiki.org/emacs/buffer-move.el
-
-#+begin_src emacs-lisp
-(require 'windmove)
-
-;;;###autoload
-(defun buf-move-up ()
-  "Swap the current buffer and the buffer above the split.
-If there is no split, ie now window above the current one, an
-error is signaled."
-;;  "Switches between the current buffer, and the buffer above the
-;;  split, if possible."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'up))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (null other-win)
-        (error "No window above this one")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
-;;;###autoload
-(defun buf-move-down ()
-"Swap the current buffer and the buffer under the split.
-If there is no split, ie now window under the current one, an
-error is signaled."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'down))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (or (null other-win) 
-            (string-match "^ \\*Minibuf" (buffer-name (window-buffer other-win))))
-        (error "No window under this one")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
-;;;###autoload
-(defun buf-move-left ()
-"Swap the current buffer and the buffer on the left of the split.
-If there is no split, ie now window on the left of the current
-one, an error is signaled."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'left))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (null other-win)
-        (error "No left split")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
-;;;###autoload
-(defun buf-move-right ()
-"Swap the current buffer and the buffer on the right of the split.
-If there is no split, ie now window on the right of the current
-one, an error is signaled."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'right))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (null other-win)
-        (error "No right split")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-#+end_src
 
 * SHELLS AND TERMINALS
-** Eshell
-Eshell is an Emacs 'shell' that is written in Elisp.
-
+** Eat
 #+begin_src emacs-lisp
-(use-package eshell-syntax-highlighting
-  :after esh-mode
+  (use-package eat
+    :hook ('eshell-load-hook #'eat-eshell-mode))
+#+end_src
+
+* Dev
+** Project.el
+Project Management
+#+begin_src emacs-lisp
+  ;; TODO
+#+end_src
+
+** LSP
+*** Eglot
+#+begin_src emacs-lisp
+  (use-package eglot
+  :ensure nil
+  :hook ((rust-mode)
+         . eglot-ensure)
+  :custom
+  ;; Good default
+  (eglot-events-buffer-size 0)
+  (eglot-autoshutdown t)
+  (eglot-report-progress nil)
+  ;; Manual lsp servers
   :config
-  (eshell-syntax-highlighting-global-mode +1))
-
-;; eshell-syntax-highlighting -- adds fish/zsh-like syntax highlighting.
-;; eshell-rc-script -- your profile for eshell; like a bashrc for eshell.
-;; eshell-aliases-file -- sets an aliases file for the eshell.
-  
-(setq eshell-history-size 5000
-      eshell-buffer-maximum-lines 5000
-      eshell-hist-ignoredups t
-      eshell-scroll-to-bottom-on-input t
-      eshell-destroy-buffer-when-process-dies t
-      eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
+  (add-to-list 'eglot-server-programs
+               `(rust-ts-mode . ("rust-analyzer" :initializationOptions ( :procMacro (:enable t) :cargo (:buildScripts (:enable t) :features "all"))))
+               `(svelte-ts-mode . ("svelte-language-server")) ;; Adds our lua lsp server to eglot's server list
+  )
+)
 #+end_src
 
-** Vterm
-Vterm is a terminal emulator within Emacs.  The 'shell-file-name' setting sets the shell to be used in M-x shell, M-x term, M-x ansi-term and M-x vterm.  By default, the shell is set to 'fish' but could change it to 'bash' or 'zsh' if you prefer.
+** Treesitter
+;#+begin_src emacs-lisp
+  (setq treesit-language-source-alist
+        '((css "https://github.com/tree-sitter/tree-sitter-css")
 
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+          (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+  (svelte "https://github.com/Himujjal/tree-sitter-svelte")
+
+          (rust "https://github.com/tree-sitter/tree-sitter-rust"))
+  (defun compile-ts-parsers ()
+  (interactive)
+    (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+    )
+
+;#+end_src
 #+begin_src emacs-lisp
-(use-package vterm
-:config
-(setq shell-file-name "/bin/zsh"
-      vterm-max-scrollback 5000))
-#+end_src
+  (use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :functions global-treesit-auto-mode
+  :defines global-treesit-auto-modes
+  :preface
+  (defun my/ts-mode-p (mode)
+    (let* ((mode-name (symbol-name mode)))
+      (cond
+       ((string-suffix-p "ts-mode" mode-name) t)
+       (t nil))))
 
-** Vterm-Toggle 
-[[https://github.com/jixiuf/vterm-toggle][vterm-toggle]] toggles between the vterm buffer and whatever buffer you are editing.
+  (defun my/bring-previous-mode-hooks ()
+    (let ((mode-name (symbol-name major-mode)))
+      (if (not (my/ts-mode-p major-mode))
+          (error "Current mode does not contain -ts suffix: %s" mode-name)
+        (let* (
+               (non-ts-mode-name      (concat (string-remove-suffix "-ts" (string-remove-suffix "-mode" mode-name)) "-mode"))
+               (non-ts-mode-hook-name (concat non-ts-mode-name "-hook")))
 
-#+begin_src emacs-lisp
-(use-package vterm-toggle
-  :after vterm
+          (if (not (intern non-ts-mode-hook-name))
+              (message "There is no hook list named %s" non-ts-mode-hook-name)
+            (run-hooks (intern non-ts-mode-hook-name))
+            (message "Ran hook for %s" non-ts-mode-hook-name))))))
+
+  (defun my/get-treesit-auto-modes ()
+    "Extracts all available treesit auto modes"
+    (unless global-treesit-auto-modes
+      (error "global-treesit-auto-modes vartable does not exist, can't transfer hooks from non treesit modes"))  
+    (seq-filter 'my/ts-mode-p global-treesit-auto-modes))
+
   :config
-  (setq vterm-toggle-fullscreen-p nil)
-  (setq vterm-toggle-scope 'project)
-  (add-to-list 'display-buffer-alist
-               '((lambda (buffer-or-name _)
-                     (let ((buffer (get-buffer buffer-or-name)))
-                       (with-current-buffer buffer
-                         (or (equal major-mode 'vterm-mode)
-                             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
-                  (display-buffer-reuse-window display-buffer-at-bottom)
-                  ;;(display-buffer-reuse-window display-buffer-in-direction)
-                  ;;display-buffer-in-direction/direction/dedicated is added in emacs27
-                  ;;(direction . bottom)
-                  ;;(dedicated . t) ;dedicated is supported in emacs27
-                  (reusable-frames . visible)
-                  (window-height . 0.3))))
+
+  (add-to-list 'treesit-auto-langs 'svelte)
+
+  (add-to-list 'treesit-auto-recipe-list
+               (make-treesit-auto-recipe
+                :lang 'svelte
+                :ts-mode 'svelte-ts-mode
+                :remap 'svelte-mode
+                :url "https://github.com/Himujjal/tree-sitter-svelte"
+                :source-dir "./src"
+                :ext "\\.svelte\\'"))
+
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode)
+
+  ;; add lambda function hook to list of emacs hooks
+  (dolist (mode (my/get-treesit-auto-modes))
+    (let* ((mode-name (symbol-name mode))
+           (hook-name (concat mode-name "-hook")))
+      (add-hook (intern hook-name) #'my/bring-previous-mode-hooks))))
 #+end_src
+** Treesit-Fold
+TODO
+
